@@ -39,4 +39,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth
 
 Route::group(['prefix' => 'demo', 'namespace' => 'Demo'], function(){
     Route::get('transaction', 'TransactionController@index');
+    Route::get('observe', 'ObserveController@index');
+    Route::get('observe/create', 'ObserveController@create');
+    Route::get('observe/{id}/edit', 'ObserveController@edit')->where('id', '[0-9]+');
 });

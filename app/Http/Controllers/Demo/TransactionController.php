@@ -21,6 +21,10 @@ class TransactionController extends Controller
     public function index()
     {
         try {
+            TestTransactionA::query()->chunk(1000, function($ta){
+                echo $ta->first()->id, PHP_EOL;
+            });
+            exit;
             \DB::beginTransaction();
             $randNum = mt_rand(1, 1000);
             $title = 'Title'.$randNum;
@@ -32,6 +36,14 @@ class TransactionController extends Controller
             /*return TestTransactionA::create([
                 'title' => $title
             ]);*/
+
+            // 添加test_transaction_b数据
+            if ($test_transaction_a_add_id) {
+                $test_transaction_b_add_ret = TestTransactionB::query()->insertGetId([
+                    'transaction_a_id' => $test_transaction_a_add_id
+                ]);
+                $ret = $test_transaction_b_add_ret;
+            }
 
             $ret = json_encode([]);
 
@@ -47,14 +59,6 @@ class TransactionController extends Controller
             // 抛出异常
             throw new \Exception('Here is a exception.');
 
-            if ($test_transaction_a_add_id) {
-                $test_transaction_b_add_ret = TestTransactionB::query()->insertGetId([
-                    'transaction_a_id' => $test_transaction_a_add_id
-                ]);
-                $ret = $test_transaction_b_add_ret;
-            }
-
-            // 添加test_transaction_b数据
             \DB::commit();
             return $ret;
         } catch (\Exception $ex) {
